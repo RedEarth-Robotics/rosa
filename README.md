@@ -46,8 +46,37 @@ ROSA is your AI-powered assistant for ROS1 and ROS2 systems. Built on the [Langc
 - ROS Noetic or higher
 
 ### Installation
+
+#### From PyPI (Official Release)
 ```bash
 pip3 install jpl-rosa
+```
+
+#### From This Fork (Development Version)
+For the latest features and updates from this fork, use the installation script:
+
+**Linux/macOS:**
+```bash
+./install.sh
+```
+
+**Windows:**
+```cmd
+install.bat
+```
+
+This will:
+- Clone the repository
+- Create a Python virtual environment
+- Install ROSA in editable mode with all LLM providers (Anthropic, Ollama)
+
+**Manual installation:**
+```bash
+git clone git@github.com:RedEarth-Robotics/rosa.git
+cd rosa
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -e ".[all]"
 ```
 
 ### Usage Examples
