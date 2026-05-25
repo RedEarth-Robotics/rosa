@@ -30,6 +30,10 @@ if TYPE_CHECKING:
     from langchain_anthropic import ChatAnthropic
     from langchain_ollama import ChatOllama
 
+from .cache import ROSStateCache, ToolResultCache
+from .cache.in_flight_requests import RequestCoalescer
+from .memory import ChatHistoryManager
+from .performance.profiler import ROSAProfiler
 from .prompts import RobotSystemPrompts, system_prompts
 from .tools import ROSATools
 
@@ -93,6 +97,14 @@ class ROSA:
         streaming: bool = True,
         max_iterations: int = 100,
         return_intermediate_steps: bool = False,
+        # New performance params
+        enable_caching: bool = True,
+        cache_ttl_override: Optional[dict] = None,
+        history_strategy: str = "accumulate",
+        history_window_size: int = 20,
+        token_budget: int = 8000,
+        max_cache_entries: int = 500,
+        enable_profiling: bool = False,
     ):
         self.__chat_history = []
         self.__ros_version = ros_version
@@ -104,6 +116,33 @@ class ROSA:
         self.__streaming = streaming
         self.__max_iterations = max_iterations
         self.__return_intermediate_steps = return_intermediate_steps
+
+        # Initialize performance components
+        self.__profiler = ROSAProfiler()
+        self.__profiler.set_enabled(enable_profiling)
+
+        self.__tool_cache = ToolResultCache(
+            enabled=enable_caching,
+            max_entries=max_cache_entries,
+        )
+
+        self.__ros_state_cache = ROSStateCache(
+            ros_version=ros_version,
+            enabled=enable_caching,
+        )
+
+        self.__coalescer = RequestCoalescer()
+
+        # Initialize chat history manager
+        if accumulate_chat_history:
+            self.__history_manager = ChatHistoryManager(
+                strategy=history_strategy,
+                window_size=history_window_size,
+                token_budget=token_budget,
+            )
+        else:
+            self.__history_manager = None
+
         self.__tools = self._get_tools(
             ros_version, packages=tool_packages, tools=tools, blacklist=self.__blacklist
         )
@@ -130,6 +169,8 @@ class ROSA:
     def clear_chat(self):
         """Clear the chat history."""
         self.__chat_history = []
+        if self.__history_manager:
+            self.__history_manager.clear()
 
     def invoke(self, query: str) -> str:
         """
@@ -283,7 +324,14 @@ class ROSA:
         blacklist: Optional[list],
     ) -> ROSATools:
         """Create a ROSA tools object with the specified ROS version, tools, packages, and blacklist."""
-        rosa_tools = ROSATools(ros_version, blacklist=blacklist)
+        rosa_tools = ROSATools(
+            ros_version,
+            blacklist=blacklist,
+            ros_state_cache=self.__ros_state_cache,
+            tool_cache=self.__tool_cache,
+            coalescer=self.__coalescer,
+            profiler=self.__profiler,
+        )
         if tools:
             rosa_tools.add_tools(tools)
         if packages:
@@ -335,6 +383,17 @@ class ROSA:
     def _record_chat_history(self, query: str, response: str):
         """Record the chat history if accumulation is enabled."""
         if self.__accumulate_chat_history:
-            self.__chat_history.extend(
-                [HumanMessage(content=query), AIMessage(content=response)]
-            )
+            if self.__history_manager:
+                self.__history_manager.add_message("user", query)
+                self.__history_manager.add_message("assistant", response)
+                # Update __chat_history from manager for LangChain compatibility
+                self.__chat_history = [
+                    HumanMessage(content=m["content"]) if m["role"] == "user"
+                    else AIMessage(content=m["content"])
+                    for m in self.__history_manager.get_messages()
+                    if m["role"] in ("user", "assistant")
+                ]
+            else:
+                self.__chat_history.extend(
+                    [HumanMessage(content=query), AIMessage(content=response)]
+                )

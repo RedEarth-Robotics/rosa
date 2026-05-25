@@ -64,11 +64,16 @@ def inject_blacklist(default_blacklist: List[str]):
 
 class ROSATools:
     def __init__(
-        self, ros_version: Literal[1, 2], blacklist: Optional[List[str]] = None
+        self, ros_version: Literal[1, 2], blacklist: Optional[List[str]] = None,
+        ros_state_cache=None, tool_cache=None, coalescer=None, profiler=None,
     ):
         self.__tools: list = []
         self.__ros_version = ros_version
         self.__blacklist = blacklist
+        self.__ros_state_cache = ros_state_cache
+        self.__tool_cache = tool_cache
+        self.__coalescer = coalescer
+        self.__profiler = profiler
 
         # Add the default tools
         from . import calculation, log, system
@@ -79,11 +84,15 @@ class ROSATools:
 
         if self.__ros_version == 1:
             from . import ros1
-
+            # Inject cache
+            if self.__ros_state_cache:
+                ros1.set_ros_state_cache(self.__ros_state_cache)
             self.__iterative_add(ros1, blacklist=blacklist)
         elif self.__ros_version == 2:
             from . import ros2
-
+            # Inject cache
+            if self.__ros_state_cache:
+                ros2.set_ros_state_cache(self.__ros_state_cache)
             self.__iterative_add(ros2, blacklist=blacklist)
         else:
             raise ValueError("Invalid ROS version. Must be either 1 or 2.")

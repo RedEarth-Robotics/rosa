@@ -30,7 +30,7 @@
 <!-- Header block for project -->
 
 > [!IMPORTANT]
-> 📚 **New to ROSA?** Check out our [Wiki](https://github.com/nasa-jpl/rosa/wiki) for documentation, guides and FAQs!
+> 📚 **New to ROSA?** Check out our comprehensive [Documentation](docs/index.md) or our [Wiki](https://github.com/nasa-jpl/rosa/wiki) for guides and FAQs!
 
 
 ROSA is your AI-powered assistant for ROS1 and ROS2 systems. Built on the [Langchain](https://python.langchain.com/v0.2/docs/introduction/) framework, ROSA helps you interact with robots using natural language, making robotics development more accessible and efficient.
@@ -90,10 +90,48 @@ in the form of an IsaacSim extension. This will allow you not only to control yo
 #### ROSA Demo: Nvidia IsaacSim Extension (click for YouTube)
 [![Carter YouTube Thumbnail Play](https://github.com/user-attachments/assets/a6948d5e-2726-4dd8-8dee-19dfb5188f1d)](https://www.youtube.com/watch?v=mm5525G_EfQ)
 
+## 📚 Documentation
+
+Our comprehensive documentation covers everything from getting started to advanced customization:
+
+### Getting Started
+- [Installation & Setup](docs/core/installation.md) - Get ROSA up and running
+- [Quick Start Tutorial](docs/tutorials/quick-start.md) - Your first ROSA interaction (15 min)
+- [Configuration Guide](docs/core/configuration.md) - Configure ROSA for your setup
+
+### Guides
+- [New ROS Developer Guide](docs/user-guides/new-ros-developer.md) - For developers new to ROS
+- [Experienced ROS Developer Guide](docs/user-guides/experienced-ros-developer.md) - For ROS experts
+- [Researcher Guide](docs/user-guides/researcher.md) - For academic and research use
+- [Troubleshooting Guide](docs/user-guides/troubleshooting.md) - Solve common issues
+
+### Tutorials
+- [Quick Start](docs/tutorials/quick-start.md) - 15 minutes to first ROSA command
+- [Basic ROS Operations](docs/tutorials/basic-ros-operations.md) - Learn ROS inspection and control (45 min)
+- [Custom Tool Development](docs/tutorials/custom-tool-development.md) - Build your own tools (60 min)
+- [Advanced Agent Customization](docs/tutorials/advanced-agent-customization.md) - Production-ready agents (90 min)
+
+### Code Examples
+- [Navigation](docs/examples/navigation/) - Path planning, obstacle avoidance
+- [Manipulation](docs/examples/manipulation/) - Pick and place, arm control
+- [Perception](docs/examples/perception/) - Camera, Lidar, sensor fusion
+- [Simulation](docs/examples/simulation/) - Gazebo, IsaacSim integration
+- [Custom Robots](docs/examples/custom-robots/) - Templates for various robots
+
+### Research Resources
+- [Paper Integration Guide](docs/research/paper-integration.md) - Cite and document ROSA in research
+- [Experiment Templates](docs/research/experiment-templates.md) - Standard research setups
+- [Case Studies](docs/research/case-studies.md) - Published research using ROSA
+
+### Reference
+- [API Reference](docs/core/api-reference.md) - ROSA Python API documentation
+- [ROS Tools Reference](docs/core/ros-tools-reference.md) - Built-in ROS tools
+- [Architecture Overview](docs/core/architecture.md) - System design and components
+
 ## 📘 Learn More
 
 - [📕 Read the paper](https://arxiv.org/abs/2410.06472)
-- [🗺️ Roadmap](https://github.com/nasa-jpl/rosa/wiki/Feature-Roadmap)
+- [🗺️ Roadmap](ROADMAP.md) and [Wiki Roadmap](https://github.com/nasa-jpl/rosa/wiki/Feature-Roadmap)
 - [🏷️ Releases](https://github.com/nasa-jpl/rosa/releases)
 - [❓ FAQ](https://github.com/nasa-jpl/rosa/wiki/FAQ)
 

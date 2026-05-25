@@ -12,17 +12,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# This module is a backward-compatible shim.
-# All tools have been moved to the src/rosa/tools/ros2/ package.
-# Import from there for new code.
-
-from .ros2 import (
-    ros2_topic_list, ros2_topic_echo, ros2_topic_info,
-    ros2_node_list, ros2_node_info,
-    ros2_service_list, ros2_service_info, ros2_service_call,
-    ros2_param_list, ros2_param_get, ros2_param_set,
-    ros2_bag_record, ros2_bag_info, ros2_bag_play,
-    ros2_launch_list, ros2_action_list,
-    ros2_doctor, roslog_list,
-    get_entities, execute_ros_command, set_ros_state_cache,
-)
+from .topics import rostopic_list, rostopic_info, rostopic_echo
+from .nodes_services import rosnode_list, rosnode_info, rosservice_list, rosservice_info, rosservice_call
+from .graph_params import rosgraph_get, rosparam_list, rosparam_get, rosparam_set
+from .packages import rospkg_list, rosmsg_info, rossrv_info
+from .bag_actions import rosbag_record, rosbag_info, rosbag_play, actionclient_list, roslaunch_find
+from .utils import get_entities, set_ros_state_cache
